@@ -23,6 +23,7 @@ class CreateQuestionAnswersTable extends Migration
             $table->text('wrong_answer4');
             $table->text('wrong_answer5');
             $table->string('last_modified_by');
+            $table->string('reviewed_by');
             $table->timestamps();
         });
     }

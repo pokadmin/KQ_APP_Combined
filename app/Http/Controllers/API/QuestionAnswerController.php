@@ -56,7 +56,8 @@ class QuestionAnswerController extends Controller
             'wrong_answer3'=>$request->input('wrong_answer3'),
             'wrong_answer4'=>$request->input('wrong_answer4'),
             'wrong_answer5'=>$request->input('wrong_answer5'),
-            'modified_by'=>'Admin User'   // need to get the user from session or token
+            'last_modified_by'=>'Admin User',   // need to get the user from session or token
+            'reviewed_by'=>$request->input('reviewed_by'),
         ]);
 
         $newQuestionAnswer->save();
@@ -112,7 +113,8 @@ class QuestionAnswerController extends Controller
         $questionAnswer->wrong_answer3=$request->input('wrong_answer3');
         $questionAnswer->wrong_answer4=$request->input('wrong_answer4');
         $questionAnswer->wrong_answer5=$request->input('wrong_answer5');
-        $questionAnswer->modified_by='Admin User';   // need to get the user from session or token
+        $questionAnswer->last_modified_by='Admin User';   // need to get the user from session or token
+        $questionAnswer->reviewed_by=$request->input('reviewed_by');
 
         $questionAnswer->save();
 

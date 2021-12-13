@@ -21,7 +21,8 @@ class QuestionAnswerFactory extends Factory
             'wrong_answer3'=>$this->faker->text($maxNbChars = 50),
             'wrong_answer4'=>$this->faker->text($maxNbChars = 50),
             'wrong_answer5'=>$this->faker->text($maxNbChars = 50),
-            'last_modified_by'=>$this->faker->name()
+            'last_modified_by'=>$this->faker->name(),
+            'reviewed_by'=>$this->faker->name()
         ];
     }
 }
