@@ -24,21 +24,11 @@ composer install
 
 
 ## Database Setup
-
-This demo uses SQLite. Create your database by running:
-
-```bash
-touch database/database.sqlite
+setup a MySQl DB 
+```
+knowledge_quotient
 ```
 
-Open up your `.env` file again, find the following variables, and replace them with:
-
-```
-DB_CONNECTION=sqlite
-DB_DATABASE=/absolute/path/to/database.sqlite
-```
-
-> Note: You need to use the absolute path to the database.sqlite file you just created as the value for DB_DATABASE. You can usually get this by right-clicking the file in your code editor and clicking "Copy path".
 
 ### Migrate and Seed your database
 
