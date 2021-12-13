@@ -14,8 +14,13 @@ class QuestionAnswerFactory extends Factory
     public function definition()
     {
         return [
-            'questions'=>$this->faker->text($maxNbChars = 50),
-            'answers'=>$this->faker->text($maxNbChars = 50),
+            'question'=>$this->faker->text($maxNbChars = 50),
+            'correct_answer'=>$this->faker->text($maxNbChars = 50),
+            'wrong_answer1'=>$this->faker->text($maxNbChars = 50),
+            'wrong_answer2'=>$this->faker->text($maxNbChars = 50),
+            'wrong_answer3'=>$this->faker->text($maxNbChars = 50),
+            'wrong_answer4'=>$this->faker->text($maxNbChars = 50),
+            'wrong_answer5'=>$this->faker->text($maxNbChars = 50),
             'last_modified_by'=>$this->faker->name()
         ];
     }

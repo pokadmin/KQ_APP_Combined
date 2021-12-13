@@ -15,8 +15,13 @@ class CreateQuestionAnswersTable extends Migration
     {
         Schema::create('question_answers', function (Blueprint $table) {
             $table->id();
-            $table->text('questions');
-            $table->text('answers');
+            $table->text('question');
+            $table->text('correct_answer');
+            $table->text('wrong_answer1');
+            $table->text('wrong_answer2');
+            $table->text('wrong_answer3');
+            $table->text('wrong_answer4');
+            $table->text('wrong_answer5');
             $table->string('last_modified_by');
             $table->timestamps();
         });
