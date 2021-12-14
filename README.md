@@ -70,7 +70,7 @@ php artisan serve
 The endpoints to get all Question_Answers and get a single Question_Answer should be public and accessible without an access token. Run the following cURL command and you should get a response with all Question_Answers.
 
 ```bash
-curl http://localhost:8000/api/QuestionAnswer -i
+curl http://localhost:8000/api/questionAnswer -i
 ```
 ## Development on going.....
 

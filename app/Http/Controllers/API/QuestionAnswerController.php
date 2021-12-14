@@ -1,9 +1,10 @@
 <?php
-
+//https://dev.to/seankerwin/laravel-8-rest-api-with-resource-controllers-5bok
 
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\QuestionAnswer as ResourcesQuestionAnswer;
 use App\Models\QuestionAnswer;
 use Illuminate\Http\Request;
 
@@ -16,8 +17,7 @@ class QuestionAnswerController extends Controller
      */
     public function index()
     {
-        $questionAnswers=QuestionAnswer::all();
-        return response()->json($questionAnswers);
+      return ResourcesQuestionAnswer::collection(QuestionAnswer::paginate(5));
     }
 
     /**
@@ -61,7 +61,9 @@ class QuestionAnswerController extends Controller
         ]);
 
         $newQuestionAnswer->save();
-        return response()->json($newQuestionAnswer);
+        return response()->json([
+            "message"=>"Question and Answers added.",
+            "data"=>$newQuestionAnswer],201);
 
     }
 
@@ -73,7 +75,7 @@ class QuestionAnswerController extends Controller
      */
     public function show(QuestionAnswer $questionAnswer)
     {
-        return response()->json($questionAnswer);
+        return new ResourcesQuestionAnswer($questionAnswer);
     }
 
     /**
@@ -82,7 +84,7 @@ class QuestionAnswerController extends Controller
      * @param  \App\Models\QuestionAnswer  $question
      * @return \Illuminate\Http\Response
      */
-    public function edit(QuestionAnswer $question)
+    public function edit(QuestionAnswer $questionAnswer)
     {
         //
     }
