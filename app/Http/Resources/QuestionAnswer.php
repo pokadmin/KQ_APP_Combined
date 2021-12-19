@@ -26,8 +26,12 @@ class QuestionAnswer extends JsonResource
             'wrong_answer4'=>$this->wrong_answer4,
             'wrong_answer5'=>$this->wrong_answer5,
             'attributes'=>[
-                'last_modified_by'=>$this->last_modified_by,
+                'language'=>$this->language,
+                'pokp_link'=>$this->pokp_link,
+                'bodhitube_podbean_link'=>$this->bodhitube_podbean_link,
+                'created_by'=>$this->created_by,
                 'reviewed_by'=>$this->reviewed_by,
+                'last_modified_by'=>$this->last_modified_by,
                 'created_at'=>(string)$this->created_at,
                 'updated_at'=>(string)$this->updated_at
             ],

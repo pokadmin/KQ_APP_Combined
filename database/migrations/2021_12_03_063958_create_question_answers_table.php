@@ -15,6 +15,8 @@ class CreateQuestionAnswersTable extends Migration
     {
         Schema::create('question_answers', function (Blueprint $table) {
             $table->id();
+            $table->smallInteger('question_level_id');  // level from 1 to 10
+            $table->string('language');
             $table->text('question');
             $table->text('correct_answer');
             $table->text('wrong_answer1');
@@ -22,8 +24,11 @@ class CreateQuestionAnswersTable extends Migration
             $table->text('wrong_answer3');
             $table->text('wrong_answer4');
             $table->text('wrong_answer5');
-            $table->string('last_modified_by');
+            $table->text('pokp_link');
+            $table->text('bodhitube_podbean_link');
+            $table->string('created_by');
             $table->string('reviewed_by');
+            $table->string('last_modified_by');
             $table->timestamps();
         });
     }
