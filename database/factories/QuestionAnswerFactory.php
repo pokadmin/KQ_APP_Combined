@@ -14,7 +14,7 @@ class QuestionAnswerFactory extends Factory
     public function definition()
     {
         return [
-            'question_level_id'=>$this->faker->numberBetween(1,10),
+            'question_level'=>$this->faker->numberBetween(1,10),
             'language'=>$this->faker->randomElement(['English','Hindi']),
             'question'=>$this->faker->text($maxNbChars = 50),
             'correct_answer'=>$this->faker->text($maxNbChars = 50),
