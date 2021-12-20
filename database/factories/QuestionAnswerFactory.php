@@ -23,12 +23,13 @@ class QuestionAnswerFactory extends Factory
             'wrong_answer3'=>$this->faker->text($maxNbChars = 50),
             'wrong_answer4'=>$this->faker->text($maxNbChars = 50),
             'wrong_answer5'=>$this->faker->text($maxNbChars = 50),
+            'explanation'=>$this->faker->text($maxNbChars = 50),
             'pokp_link'=>$this->faker->url(),
             'bodhitube_podbean_link'=>$this->faker->url(),
             'created_by'=>$this->faker->name(),
             'reviewed_by'=>$this->faker->name(),
             'last_modified_by'=>$this->faker->name(),
-
+            'verification_status'=>$this->faker->boolean()
         ];
     }
 }
