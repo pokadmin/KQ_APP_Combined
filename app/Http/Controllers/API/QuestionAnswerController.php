@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\QuestionAnswer as ResourcesQuestionAnswer;
 use App\Models\QuestionAnswer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class QuestionAnswerController extends Controller
 {
@@ -17,8 +19,10 @@ class QuestionAnswerController extends Controller
      */
     public function index()
     {
-      return ResourcesQuestionAnswer::collection(QuestionAnswer::paginate(5));
+      return ResourcesQuestionAnswer::collection(QuestionAnswer::inRandomOrder()->paginate(5));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -38,32 +42,48 @@ class QuestionAnswerController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'question'=>'required',
-            'correct_answer'=>'required',
-            'wrong_answer1'=>'required',
-            'wrong_answer2'=>'required',
-            'wrong_answer3'=>'required',
-            'wrong_answer4'=>'required',
-            'wrong_answer5'=>'required',
+        $validator=Validator::make($request->all(),[
+            'question'=>'required|string',
+            'question_level'=>'required|numeric',
+            'language'=>'required|string',
+            'correct_answer'=>'required|string',
         ]);
 
+        if($validator->fails()){
+            return response([
+                'status'=>false,
+                'message'=> $validator->errors()
+            ],401);
+        }
+        // Retrieve the validated input...
+        $validated = $validator->validated();
+
         $newQuestionAnswer=new QuestionAnswer([
-            'question'=>$request->input('question'),
-            'correct_answer'=>$request->input('correct_answer'),
+            'question'=>$validated['question'],
+            'question_level'=>$validated['question_level'],
+            'correct_answer'=>$validated['correct_answer'],
             'wrong_answer1'=>$request->input('wrong_answer1'),
             'wrong_answer2'=>$request->input('wrong_answer2'),
             'wrong_answer3'=>$request->input('wrong_answer3'),
             'wrong_answer4'=>$request->input('wrong_answer4'),
             'wrong_answer5'=>$request->input('wrong_answer5'),
-            'last_modified_by'=>'Admin User',   // need to get the user from session or token
+            'explanation'=>$request->input('explanation'),
+            'language'=>$validated['language'],
+            'pokp_link'=>$request->input('pokp_link'),
+            'bodhitube_podbean_link'=>$request->input('bodhitube_podbean_link'),
+            'created_by'=>auth()->user()->name,
+            'verification_status'=>false, // not verified
+            'reviewed_by'=>null, // null when question is first created. it will be reviwed by someone else
+            'last_modified_by'=>auth()->user()->name,   // need to get the user from session or token
             'reviewed_by'=>$request->input('reviewed_by'),
         ]);
 
         $newQuestionAnswer->save();
         return response()->json([
+            'status'=>true,
             "message"=>"Question and Answers added.",
-            "data"=>$newQuestionAnswer],201);
+            "data"=> new ResourcesQuestionAnswer($newQuestionAnswer)
+        ],201);
 
     }
 
@@ -93,34 +113,68 @@ class QuestionAnswerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\QuestionAnswer  $question
+     * @param  \App\Models\QuestionAnswer  $questionAnswer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, QuestionAnswer $questionAnswer)
+    public function update(Request $request,QuestionAnswer $questionAnswer)
     {
-        $request->validate([
-            'question'=>'required',
-            'correct_answer'=>'required',
-            'wrong_answer1'=>'required',
-            'wrong_answer2'=>'required',
-            'wrong_answer3'=>'required',
-            'wrong_answer4'=>'required',
-            'wrong_answer5'=>'required',
-        ]);
 
-        $questionAnswer->question=$request->input('question');
-        $questionAnswer->correct_answer=$request->input('correct_answer');
+        if($request->input('verification_status')=='true'){
+            $verification_status=true;
+            $validator=Validator::make($request->all(),[
+                'question'=>'required|string',
+                'question_level'=>'required|numeric',
+                'language'=>'required|string',
+                'correct_answer'=>'required|string',
+                'wrong_answer1'=>'required|string',
+                'wrong_answer2'=>'required|string',
+                'wrong_answer3'=>'required|string',
+                'wrong_answer4'=>'required|string',
+                'wrong_answer5'=>'required|string',
+                'explanation'=>'required|string',
+                'language'=>'required|string',
+                'pokp_link'=>'required|url',
+                'bodhitube_podbean_link'=>'required|url',
+                'verification_status'=>'required', // not verified
+            ]);
+
+
+        }else{
+            $verification_status=false;
+            $validator=Validator::make($request->all(),[
+                'question'=>'required|string',
+                'question_level'=>'required|numeric',
+                'language'=>'required|string',
+                'correct_answer'=>'required|string',
+            ]);
+        }
+
+        // Retrieve the validated input...
+        $validated = $validator->validated();
+
+        $questionAnswer->question=$validated['question'];
+        $questionAnswer->correct_answer=$validated['question'];
         $questionAnswer->wrong_answer1=$request->input('wrong_answer1');
         $questionAnswer->wrong_answer2=$request->input('wrong_answer2');
         $questionAnswer->wrong_answer3=$request->input('wrong_answer3');
         $questionAnswer->wrong_answer4=$request->input('wrong_answer4');
         $questionAnswer->wrong_answer5=$request->input('wrong_answer5');
-        $questionAnswer->last_modified_by='Admin User';   // need to get the user from session or token
+        $questionAnswer->explanation=$request->input('explanation');
+        $questionAnswer->language=$validated['language'];
+        $questionAnswer->pokp_link=$request->input('pokp_link');
+        $questionAnswer->bodhitube_podbean_link=$request->input('bodhitube_podbean_link');
+        $questionAnswer->verification_status=$verification_status;
         $questionAnswer->reviewed_by=$request->input('reviewed_by');
+        $questionAnswer->last_modified_by=auth()->user()->name;
+        $questionAnswer->reviewed_by=$verification_status?auth()->user()->name:null;
 
         $questionAnswer->save();
 
-        return response()->json($questionAnswer);
+        return response()->json([
+            'status'=>true,
+            'message'=>"Question Answer updated successfully!",
+            'data'=>new ResourcesQuestionAnswer($questionAnswer)
+        ],201);
     }
 
     /**
@@ -132,6 +186,11 @@ class QuestionAnswerController extends Controller
     public function destroy(QuestionAnswer $questionAnswer)
     {
         $questionAnswer->delete();
-        return response()->json($questionAnswer::all());
+        return response()->json([
+            'status'=>true,
+            'message'=>"Deleted Successfully!"
+        ],200);
     }
+
+
 }

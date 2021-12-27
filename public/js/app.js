@@ -5356,6 +5356,7 @@ var ApiCalls = /*#__PURE__*/function (_Component) {
 
     api.get('api/questionAnswer').then(function (res) {
       console.log(res);
+      console.log(JSON.parse(res));
     });
     /* api.delete('api/questionAnswer/4').then(res=>{
          console.log(res);

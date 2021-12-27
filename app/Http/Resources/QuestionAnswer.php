@@ -21,7 +21,7 @@ class QuestionAnswer extends JsonResource
             'question_level'=>$this->question_level,
             'question'=>$this->question,
             'answers'=>[
-                'correct_answer'=>$this->correct_answer,
+                'correct_answer0'=>$this->correct_answer,
                 'wrong_answer1'=>$this->wrong_answer1,
                 'wrong_answer2'=>$this->wrong_answer2,
                 'wrong_answer3'=>$this->wrong_answer3,

@@ -19,18 +19,18 @@ class CreateQuestionAnswersTable extends Migration
             $table->string('language');
             $table->text('question');
             $table->text('correct_answer');
-            $table->text('wrong_answer1');
-            $table->text('wrong_answer2');
-            $table->text('wrong_answer3');
-            $table->text('wrong_answer4');
-            $table->text('wrong_answer5');
-            $table->text('explanation');
-            $table->text('pokp_link');
-            $table->text('bodhitube_podbean_link');
+            $table->text('wrong_answer1')->nullable();
+            $table->text('wrong_answer2')->nullable();
+            $table->text('wrong_answer3')->nullable();
+            $table->text('wrong_answer4')->nullable();
+            $table->text('wrong_answer5')->nullable();
+            $table->text('explanation')->nullable();
+            $table->text('pokp_link')->nullable();
+            $table->text('bodhitube_podbean_link')->nullable();
             $table->string('created_by');
-            $table->string('reviewed_by');
+            $table->string('reviewed_by')->nullable();
             $table->string('last_modified_by');
-            $table->boolean('verification_status');
+            $table->boolean('verification_status');  // default is 0
             $table->timestamps();
         });
     }
