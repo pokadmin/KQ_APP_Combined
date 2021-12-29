@@ -9,6 +9,7 @@ use App\Models\QuestionAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class QuestionAnswerController extends Controller
 {
@@ -18,8 +19,33 @@ class QuestionAnswerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
+    {   return ResourcesQuestionAnswer::collection(QuestionAnswer::Where('language','English')->inRandomOrder()->paginate(5))->additional(['status'=>true]);
+
+    }
+
+
+     /**
+     * Provide a random set of paginated resources with limit of 5 based on language .
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function questionAnswerSet(Request $request)
     {
-      return ResourcesQuestionAnswer::collection(QuestionAnswer::inRandomOrder()->paginate(5));
+        $validator=Validator::make($request->all(),[
+            'language'=>['required',Rule::in(['Hindi','English'])]
+        ]);
+
+        if($validator->fails()){
+            return response([
+                'status'=>false,
+                'message'=> $validator->errors()
+            ],401);
+        }
+
+        $validated = $validator->validated();
+
+        return ResourcesQuestionAnswer::collection(QuestionAnswer::Where('language',$validated['language'])->inRandomOrder()->paginate(5))->additional(['status'=>true]);
+
     }
 
 
@@ -95,7 +121,10 @@ class QuestionAnswerController extends Controller
      */
     public function show(QuestionAnswer $questionAnswer)
     {
-        return new ResourcesQuestionAnswer($questionAnswer);
+        return response()->json([
+            'status'=>true,
+            "data"=> new ResourcesQuestionAnswer($questionAnswer)
+        ],200);
     }
 
     /**
@@ -147,6 +176,13 @@ class QuestionAnswerController extends Controller
                 'language'=>'required|string',
                 'correct_answer'=>'required|string',
             ]);
+        }
+
+        if($validator->fails()){
+            return response([
+                'status'=>false,
+                'message'=> $validator->errors()
+            ],401);
         }
 
         // Retrieve the validated input...
