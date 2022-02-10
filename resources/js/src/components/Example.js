@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ApiCalls from './ApiCalls';
+
 
 function Example() {
     return (
@@ -19,7 +18,3 @@ function Example() {
 }
 
 export default Example;
-
-if (document.getElementById('example')) {
-    ReactDOM.render(<ApiCalls />, document.getElementById('example'));
-}
