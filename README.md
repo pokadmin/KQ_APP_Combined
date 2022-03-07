@@ -72,5 +72,10 @@ The endpoints to get all Question_Answers and get a single Question_Answer shoul
 ```bash
 curl http://localhost:8000/api/questionAnswer -i
 ```
+
+
+## API Documentation
+[KQ API](https://documenter.getpostman.com/view/18849417/UVRGCiKr)
+
 ## Development on going.....
 
