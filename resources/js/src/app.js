@@ -8,20 +8,21 @@ require('./bootstrap');
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-
+import './i18n';
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 
 import  Main from "./Main";
-
+import Store from "./store"
 
 
 ReactDOM.render(
-  <BrowserRouter>
-
-    <Main />
-
-  </BrowserRouter>,
+    <Store>
+        <BrowserRouter>
+            <Main />
+        </BrowserRouter>
+    </Store>
+  ,
   document.getElementById("root")
 );
