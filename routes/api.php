@@ -28,3 +28,5 @@ Route::get("/questionAnswer",[QuestionAnswerController::class,'index']);
 Route::get("/questionAnswer/{questionAnswer}",[QuestionAnswerController::class,'show']);
 Route::post("/register",[AuthController::class,'register']);
 Route::post("/login",[AuthController::class,'login']);
+Route::get('/auth',[AuthController::class,'redirectToAuth']); // need to be stateless as we are using it in API
+Route::get('/auth/callback',[AuthController::class,'handleAuthCallback']);

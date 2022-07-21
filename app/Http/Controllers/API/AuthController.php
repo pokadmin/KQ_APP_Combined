@@ -8,10 +8,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -58,8 +61,18 @@ class AuthController extends Controller
             ]
         ];
         return response($response,201);
-    }
 
+
+    } //register ends
+
+
+
+    /**
+     * Login
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function login(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -105,5 +118,64 @@ class AuthController extends Controller
 
         return response($response,201);
 
+    }//Login ends
+
+
+    /**
+     * Redirect To Auth URL
+     *
+     * generates Google redirect url and returns it
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function redirectToAuth():JsonResponse
+    {
+        return response()->json([
+            'url'=>Socialite::driver('google')
+                ->stateless()
+                ->redirect()
+                ->getTargetUrl(),
+        ]);
+
+    }//redirectToAuth ends
+
+
+
+    /**
+     * Handle Auth Callback
+     *
+     * handleAuthCallback contains the logic to handle the callback
+     * @return \Illuminate\Http\JsonResponse $user,$access_token
+     */
+    public function handleAuthCallback()
+    {
+        try {
+            /** @var SocialiteUser $socialiteUser */
+            $socialiteUser=Socialite::driver('google')->stateless()->user();
+
+        }catch(ClientException $e){
+            return response(['error'=>'Invalid credentials provided'],422);
+        }
+
+
+        /** @var User $user */
+        $user=User::query()
+            ->firstOrCreate(
+                [
+                    'email'=>$socialiteUser->getEmail(),
+                ],
+                [
+                    'email_verified_at'=>now(),
+                    'name'=>$socialiteUser->getName(),
+                    'google_id'=>$socialiteUser->getId(),
+                    'avatar'=>$socialiteUser->getAvatar(),
+                ]
+            );
+
+            return response([
+                'user'=>$user,
+                'access_token'=>$user->createToken('google-token')->plainTextToken,
+                'token_type'=>'Bearer',
+            ]);
     }
+
 }

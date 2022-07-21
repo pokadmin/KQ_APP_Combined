@@ -18,9 +18,11 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('language'); //Hindi, English
-            $table->string('role')->default('user'); // admin, user, superuser
+            $table->string('password')->nullable(); // Changed to nullable()
+            $table->string('language'); //Added- Hindi, English
+            $table->string('role')->default('user'); //Added- admin, user, superuser
+            $table->string('google_id'); // Added
+            $table->string('avatar')->nullable(); // Added
             $table->rememberToken();
             $table->timestamps();
         });
