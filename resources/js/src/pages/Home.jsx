@@ -19,11 +19,10 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  Box
 } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 //import guruSeeker from '../images/guru_seeker.jpg';
-import { borderRadius, maxWidth } from "@mui/system";
+import Login from "../components/Login";
 
 function Home(){
     const [state,dispatch]=useContext(Context);
@@ -49,6 +48,36 @@ function Home(){
       if(reason && reason == "backdropClick")
       return;
       setLangDialog(false); // close the dialog
+    }
+
+
+    // Login handling
+
+    const [loginDialog,setLoginDialog]=React.useState(false); // for displaying langauge selection dialog
+
+    const [values, setValues] = React.useState({
+        email:'',
+        password: '',
+        showPassword: false,
+    });
+
+    const handleCredChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+    };
+
+    const handleClickShowPassword = () => {
+    setValues({
+        ...values,
+        showPassword: !values.showPassword,
+    });
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
+    const handleAuthenticated=()=>{
+        console.log('Authenticated');
     }
 
   return(
@@ -147,7 +176,13 @@ function Home(){
                 <Button onClick={handleDialogClose}>Cancel</Button>
             </DialogActions>
         </Dialog>
-    </Grid>
+
+        <Login
+            authenticated={handleAuthenticated}
+        >
+        </Login>
+
+       </Grid>
 
 
   );

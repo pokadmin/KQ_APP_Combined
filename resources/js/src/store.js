@@ -12,7 +12,10 @@ const initialState={
         score:0,
         email:'',
         username:''
-    }
+    },
+    answeredQuestions:[]
+
+
 }
 
 
@@ -27,6 +30,15 @@ const Reducer=(state=initialState,action)=>{
                     language:payload.language,
                 }
             }
+
+        case 'authentication':
+            return{
+                ...state,
+                showLogin:payload.showLogin??false,
+                isAuthenticated:payload.isAuthenticated??false,
+                authentictaedUser:payload.authentictaedUser??null,
+            }
+
         case 'changeUserType':
             return {
                 ...state,
@@ -40,6 +52,15 @@ const Reducer=(state=initialState,action)=>{
 
          case 'resetUser':
              return initialState
+
+         case 'addAnsweredQuestions':
+             return {
+                 ...state,
+                 answeredQuestions:[
+                     ...state.answeredQuestions,
+                     payload
+                 ]
+             }
 
         default:
             return state

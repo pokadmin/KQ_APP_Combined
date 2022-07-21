@@ -1,6 +1,6 @@
 import React,{useContext} from "react";
 import { NavLink } from "react-router-dom";
-import { Container, Col, Row, Navbar } from "react-bootstrap"
+import { Container, Col, Row, Navbar,Nav } from "react-bootstrap"
 import tomato from "../../icons/tomato-icon-small.png"
 import {Context} from "../../store"
 import {useTranslation} from 'react-i18next'
@@ -9,6 +9,11 @@ function Header() {
 
     const [state,dispatch]=useContext(Context);
     const { t, i18n } = useTranslation();
+
+    const handleLoginClick=()=>{
+        dispatch({type:"authentication",payload:{showLogin:true}})
+    }
+
 	return (
 			// implment header
 
@@ -30,13 +35,21 @@ function Header() {
                             <Navbar.Collapse className="justify-content-end">
                             <Navbar.Text>
                                 {state.user.type=='guest'&&
-                                    <>{t('Guest')}</>
+                                    <>{t('Guest')} &nbsp; &nbsp; | &nbsp;&nbsp;</>
                                 }
                                 {state.user.type!='guest'&&
-                                    <>Signed in as {state.user.username}</>
+                                    <>Signed in as {state.user.username} &nbsp;&nbsp; | &nbsp;&nbsp;</>
                                 }
 
                             </Navbar.Text>
+                            <Nav>
+                                <Nav.Link onClick={handleLoginClick}>
+                                {state.user.type!='admin'&&
+                                    <>Admin login</>
+                                }
+                                </Nav.Link>
+
+                            </Nav>
                             </Navbar.Collapse>
 					</Container>
 				</Navbar>

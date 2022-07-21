@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const BASE_URL="http://127.0.0.1:8000/";
+const BASE_URL=window.location.origin; //"http://127.0.0.1:8000/";
 const commonHeaders={
     // put all the common hdears here
 };
@@ -18,7 +18,7 @@ const getHindiQuestionAnswers=async(params)=>{
     // 1. create header as required by API server
     // 2. make the call
 
-    return await api.post('http://127.0.0.1:8000/api/questionAnswerSet',{language:'Hindi'});
+    return await api.post(BASE_URL+'/api/questionAnswerSet',{language:'Hindi'});
 }
 
 const getEnglishQuestionAnswers=async(params)=>{

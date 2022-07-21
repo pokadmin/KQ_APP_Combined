@@ -15,6 +15,7 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Test from "./pages/Test";
 import Result from "./pages/Result";
+import Register from "./pages/Register";
 
 
 const routes = [
@@ -41,6 +42,12 @@ const routes = [
     key: "result",
     route: "/result",
     component: <Result />,
+  },
+  {
+    name: "Register",
+    key: "register",
+    route: "/register",
+    component: <Register />,
   },
 
 ];
