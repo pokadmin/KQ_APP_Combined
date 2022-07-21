@@ -18,13 +18,14 @@ use Illuminate\Support\Facades\Route;
 
 //Route::get('/questions','')
 
-Route::middleware('auth:sanctum')->group( function () {
+Route::middleware(['auth:sanctum','can:CRUD'])->group( function () {
    Route::post("/questionAnswer",[QuestionAnswerController::class,'store']);
    Route::put("/questionAnswer/{questionAnswer}",[QuestionAnswerController::class,'update']);
    Route::delete("/questionAnswer/{questionAnswer}",[QuestionAnswerController::class,'destroy']);
 });
 
 Route::get("/questionAnswer",[QuestionAnswerController::class,'index']);
+Route::post("/questionAnswerSet",[QuestionAnswerController::class,'questionAnswerSet']);
 Route::get("/questionAnswer/{questionAnswer}",[QuestionAnswerController::class,'show']);
 Route::post("/register",[AuthController::class,'register']);
 Route::post("/login",[AuthController::class,'login']);

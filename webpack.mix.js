@@ -11,6 +11,10 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
+mix.js('resources/js/src/app.js', 'public/js')
     .react()
+    .sourceMaps()
+    .webpackConfig({
+        devtool: 'inline-source-map',
+    })
     .sass('resources/sass/app.scss', 'public/css');
