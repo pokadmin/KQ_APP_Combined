@@ -6,8 +6,10 @@
 //https://www.codecheef.org/article/laravel-sanctum-authentication-example-with-product-api
 namespace App\Http\Controllers\API;
 
+exit;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Google_Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
+
 
 class AuthController extends Controller
 {
@@ -32,6 +35,7 @@ class AuthController extends Controller
             'password'=>'required|confirmed',
             'language'=>'required|string'
         ]);
+
 
         if($validator->fails()){
             return response([
@@ -129,11 +133,14 @@ class AuthController extends Controller
      */
     public function redirectToAuth():JsonResponse
     {
+
+        //https://xdoo.hr/google-login-with-react-and-laravel-api/
         return response()->json([
-            'url'=>Socialite::driver('google')
+            /* 'url'=>Socialite::driver('google')
                 ->stateless()
                 ->redirect()
-                ->getTargetUrl(),
+                ->getTargetUrl(), */
+            'clientId'=>env('GOOGLE_CLIENT_ID')
         ]);
 
     }//redirectToAuth ends
@@ -146,36 +153,40 @@ class AuthController extends Controller
      * handleAuthCallback contains the logic to handle the callback
      * @return \Illuminate\Http\JsonResponse $user,$access_token
      */
-    public function handleAuthCallback()
+    public function handleAuthCallback(Request $request)
     {
-        try {
-            /** @var SocialiteUser $socialiteUser */
-            $socialiteUser=Socialite::driver('google')->stateless()->user();
+        $id_token=$request->credential;
+        // Get $id_token via HTTPS POST.
 
-        }catch(ClientException $e){
+        // now verify that id with google and get user information
+        $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);  // Specify the CLIENT_ID of the app that accesses the backend
+        $payload = $client->verifyIdToken($id_token);
+        if ($payload) {
+
+            /** @var User $user */
+            $user=User::query()
+            ->firstOrCreate(
+                [
+                    'email'=>$payload['email'],
+                ],
+                [
+                    'email_verified_at'=>now(),
+                    'name'=>$payload['name'],
+                    'google_id'=>$payload['sub'],
+                    'avatar'=>$payload['picture'],
+                ]
+            );
+
+        } else {
             return response(['error'=>'Invalid credentials provided'],422);
         }
 
 
-        /** @var User $user */
-        $user=User::query()
-            ->firstOrCreate(
-                [
-                    'email'=>$socialiteUser->getEmail(),
-                ],
-                [
-                    'email_verified_at'=>now(),
-                    'name'=>$socialiteUser->getName(),
-                    'google_id'=>$socialiteUser->getId(),
-                    'avatar'=>$socialiteUser->getAvatar(),
-                ]
-            );
-
-            return response([
-                'user'=>$user,
-                'access_token'=>$user->createToken('google-token')->plainTextToken,
-                'token_type'=>'Bearer',
-            ]);
+        return response([
+            'user'=>$user,
+            'access_token'=>$user->createToken('google-token')->plainTextToken,
+            'token_type'=>'Bearer',
+        ]);
     }
 
 }

@@ -118,7 +118,7 @@ function Home(){
 
             </CardContent>
             <CardActions sx={{ justifyContent:"center", alignItems:"center"}}>
-                <Button variant="outlined" color="secondary" onClick={()=>{navigate('/test')}} endIcon={<SendIcon />}>{t('Start Test')}</Button>
+                <Button variant="outlined" color="secondary" onClick={()=>{navigate('/test')}} endIcon={<SendIcon />}>{t('Start Quiz')}</Button>
 
             </CardActions>
 
@@ -173,7 +173,7 @@ function Home(){
                 </Grid>
             </DialogContent>
             <DialogActions >
-                <Button onClick={handleDialogClose}>Cancel</Button>
+                <Button onClick={handleDialogClose}>OK</Button>
             </DialogActions>
         </Dialog>
 

@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './i18n';
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 import  Main from "./Main";
 import Store from "./store"
@@ -19,9 +19,9 @@ import Store from "./store"
 
 ReactDOM.render(
     <Store>
-        <BrowserRouter>
+        <MemoryRouter>
             <Main />
-        </BrowserRouter>
+        </MemoryRouter>
     </Store>
   ,
   document.getElementById("root")

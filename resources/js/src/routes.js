@@ -16,13 +16,14 @@ import Admin from "./pages/Admin";
 import Test from "./pages/Test";
 import Result from "./pages/Result";
 import Register from "./pages/Register";
+import GoogleCallback from "./components/GoogleCallback";
 
 
 const routes = [
   {
     name: "Home",
     key: "home",
-    route: "/home",
+    route: "/",
     component: <Home />,
   },
   {
@@ -48,6 +49,12 @@ const routes = [
     key: "register",
     route: "/register",
     component: <Register />,
+  },
+  {
+    name: "GoogleCallback",
+    key: "googleCallback",
+    route: "/auth/google",
+    component: <GoogleCallback />,
   },
 
 ];

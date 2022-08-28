@@ -48,7 +48,8 @@ function Result(){
     };
 
     const handleQuitApp=(event)=>{
-        window.close();
+        console.log('window close fired');
+        open(location, '_self').close();
     };
 
     return(
@@ -113,7 +114,7 @@ function Result(){
             </CardContent>
             <CardActions sx={{ justifyContent:"center", alignItems:"center"}}>
                 <Button variant="outlined" color="secondary" onClick={handleReTake} >{t('Re-Take')}</Button>
-                <Button variant="outlined" color="error" onClick={handleQuitApp} >{t('Quit App')}</Button>
+                <Button variant="outlined" color="error" onClick={()=>{navigate('/home')}} >{t('Home')}</Button>
             </CardActions>
 
         </Card>

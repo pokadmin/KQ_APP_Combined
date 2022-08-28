@@ -148,17 +148,8 @@ import SocialAuth from "../components/SocialAuth";
                 <Grid container spacing={3}>
                 <Grid item xs={12} sx={{alignItems:"center"}}>
 
-                    {!values.registered &&<>
-                    <Box mb={2}>
-                        <SocialAuth />
-                    </Box>
-
-                    <Divider>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    OR
-                    </Typography>
-                    </Divider>
-
+                    {!values.registered &&
+                    <>
                     <Stack
                     direction="column"
                     spacing={1}

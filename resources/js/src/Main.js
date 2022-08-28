@@ -32,7 +32,7 @@ function Main(){
                         >
                             <Routes>
                                 {getRoutes(routes)}
-                                <Route path="*" element={<Navigate to="/home" />} />
+                                <Route path="*" element={<Navigate to="/" />} />
                             </Routes>
                         </Container>
                     </Content>

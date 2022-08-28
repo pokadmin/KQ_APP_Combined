@@ -99,7 +99,8 @@ function Test(){
 
 
     const getFreshQuestionSet=()=>{
-        QuestionAnsAPI.getHindiQuestionAnswers()
+
+        QuestionAnsAPI.getQuestionAnswers(state.user.language)
         .then((result)=>{
             console.log(result);
 
@@ -262,12 +263,11 @@ function Test(){
                        <FormControl error={error}>
                          <FormHelperText> <Typography variant="overline">{t(helperText)} </Typography></FormHelperText>
                           <Typography variant="body2">
-                              Explanation - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent augue diam, tempor eget nulla nec, suscipit interdum ex. Nam cursus erat nunc, lacinia euismod urna tincidunt faucibus. Quisque turpis neque, semper eu ipsum semper, aliquet dictum turpis. Ut fermentum faucibus turpis. Nam id suscipit dolor. Phasellus elementum euismod nibh in sollicitudin. Nullam eleifend, nunc sit amet porta tempus, augue odio congue tellus, et tincidunt massa nulla ac turpis. Integer tincidunt felis et diam auctor, nec tincidunt nisi pharetra. Donec finibus felis id velit pretium, sed eleifend orci tincidunt. Aliquam quis lacus porttitor, ullamcorper felis ut, malesuada justo. Maecenas dignissim est odio, non gravida odio sollicitudin et. In diam augue, efficitur vel suscipit non, dapibus sit amet magna.
                               {questionSet[currentQuestionNumber].explanation}
                           </Typography>
-                          <Box mt={2}>
+                         {/*  <Box mt={2}>
                             <Link href={questionSet[currentQuestionNumber].attributes.pokp_link}><IconButton  color="secondary"><OndemandVideoIcon /><Typography variant="caption">{t('Video Link')}</Typography> </IconButton></Link>
-                          </Box>
+                          </Box> */}
                         </FormControl>
                     </Grid>
                 }

@@ -13,8 +13,10 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/src/app.js', 'public/js')
     .react()
-    .sourceMaps()
+  /*   .sourceMaps()
     .webpackConfig({
         devtool: 'inline-source-map',
-    })
-    .sass('resources/sass/app.scss', 'public/css');
+    }) */
+    .sass('resources/sass/app.scss', 'public/css')
+   /*  .setResourceRoot("/KQ/knowledge-quotient/public"); */
+   .setResourceRoot("/public");

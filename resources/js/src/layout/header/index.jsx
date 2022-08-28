@@ -1,14 +1,15 @@
 import React,{useContext} from "react";
-import { NavLink } from "react-router-dom";
 import { Container, Col, Row, Navbar,Nav } from "react-bootstrap"
 import tomato from "../../icons/tomato-icon-small.png"
 import {Context} from "../../store"
 import {useTranslation} from 'react-i18next'
+import { NavLink, useNavigate } from "react-router-dom";
 
 function Header() {
 
     const [state,dispatch]=useContext(Context);
     const { t, i18n } = useTranslation();
+    const navigate=useNavigate(); // for manual routing
 
     const handleLoginClick=()=>{
         dispatch({type:"authentication",payload:{showLogin:true}})
@@ -21,7 +22,7 @@ function Header() {
 
 				<Navbar bg="dark" variant="dark">
 					<Container fluid>
-						<Navbar.Brand href="#home">
+						<Navbar.Brand style={{cursor:"pointer"}} onClick={()=>{navigate('/home')}}>
 							<img
 									alt=""
 									src={tomato}
@@ -35,21 +36,21 @@ function Header() {
                             <Navbar.Collapse className="justify-content-end">
                             <Navbar.Text>
                                 {state.user.type=='guest'&&
-                                    <>{t('Guest')} &nbsp; &nbsp; | &nbsp;&nbsp;</>
+                                    <>{t('Guest')} </>
                                 }
                                 {state.user.type!='guest'&&
                                     <>Signed in as {state.user.username} &nbsp;&nbsp; | &nbsp;&nbsp;</>
                                 }
 
                             </Navbar.Text>
-                            <Nav>
+                           {/*  <Nav>
                                 <Nav.Link onClick={handleLoginClick}>
                                 {state.user.type!='admin'&&
                                     <>Admin login</>
                                 }
                                 </Nav.Link>
 
-                            </Nav>
+                            </Nav> */}
                             </Navbar.Collapse>
 					</Container>
 				</Navbar>
