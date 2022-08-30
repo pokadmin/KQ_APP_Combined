@@ -2,6 +2,7 @@ import axios from "axios";
 
 
 const BASE_URL=process.env.MIX_APP_URL; //"http://127.0.0.1:8000/";
+console.log('BASE_URL',BASE_URL);
 const commonHeaders={
     // put all the common hdears here
 };
