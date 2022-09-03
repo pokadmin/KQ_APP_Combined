@@ -32,11 +32,17 @@ git clone https://github.com/pokadmin/kq_back_end.git
 cd kq_back_end
 composer install
 ```
-
+Note: In case 'composer install' is timing out, remove "google/apiclient" from composer.json in the kq_back_end folder and run 'composer update'
 
 ## Database Setup
-setup a MySQl DB
-setup .env file as shown below and change the DB Username and Password according to what you have set in phpmyadmin( if any) 
+**Setup MySQL DB**
+- Go to http://localhost/phpmyadmin/index.php?route=/server/sql or connect to localhost mysql server using your favorite SQL client and execute sql command below 
+
+```sql
+create DATABASE knowledge_quotient
+```
+
+- Create .env file inside kq_back_end folder from `.env.example`. Verify below important parameters. Optionally change the DB Username and Password according to what you have set in phpmyadmin (if any) 
 ```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
