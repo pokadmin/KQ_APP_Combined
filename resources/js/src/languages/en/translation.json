@@ -17,6 +17,9 @@
     "Choose an answer":"Choose an answer",
     "Correct Answer":"Correct Answer",
     "Sorry, wrong answer!":"Sorry, wrong answer!",
+    "Q":"Q",
+    "You have scored":"You have scored",
+    "Here are your results":"Here are your results",
 
     "Login Details":"Login Details",
 
@@ -25,7 +28,11 @@
     "Quit App":"Quit App",
     "Re-Take":"Re-Take",
     "Admin Registration":"Admin Registration",
-    "Register":"Register"
+    "Register":"Register",
+    "OK":"OK",
+    "Answers":"Answers",
+    "Gyanmarg":"Gyanmarg"
+
 
 
 

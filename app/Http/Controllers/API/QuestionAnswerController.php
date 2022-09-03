@@ -8,8 +8,11 @@ use App\Http\Resources\QuestionAnswer as ResourcesQuestionAnswer;
 use App\Models\QuestionAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+
+use function PHPUnit\Framework\isEmpty;
 
 class QuestionAnswerController extends Controller
 {
@@ -29,7 +32,7 @@ class QuestionAnswerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function questionAnswerSet(Request $request)
+    public function questionAnswerSet_Original(Request $request)
     {
         $validator=Validator::make($request->all(),[
             'language'=>['required',Rule::in(['Hindi','English'])]
@@ -226,6 +229,69 @@ class QuestionAnswerController extends Controller
             'status'=>true,
             'message'=>"Deleted Successfully!"
         ],200);
+    }
+
+
+    /**
+     * Query data from gyanmarg api and return for consumption
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function questionAnswerSet(Request $request){
+        $validator=Validator::make($request->all(),[
+            'language'=>['required',Rule::in(['hi','en'])]
+        ]);
+
+        if($validator->fails()){
+            return response([
+                'status'=>false,
+                'message'=> $validator->errors()
+            ],401);
+        }
+
+        $validated = $validator->validated();
+        if($validated['language']=='hi'){
+            $maxQuestionLimit=440;
+        }else{
+            $maxQuestionLimit=160;
+        }
+        $questionId=rand(1,$maxQuestionLimit); // questions are
+        $postData=array(
+            'qid' => $questionId,
+            'lang' => $validated['language'],
+            'ver' => '1',
+            'authcode' => env('GYANMARG_API_AUTHCODE')
+        );
+
+        $apiURL=env('GYANMARG_API_URL');
+        $response = Http::asForm()->post($apiURL, $postData);
+        $arrayResult=$response->json(); // 0=>Question, 1=>correct answer, last=>explanantion
+
+        if(count($arrayResult)<1){
+            return response([
+                'status'=>false,
+                'message'=> "No Data found for question ".$questionId."Details->".$response->body()
+            ],401);
+        }
+
+        $assocArray=array(
+            'id'=>$questionId,
+            'question'=>$arrayResult[0],
+            'correct_answer'=>$arrayResult[1],
+            'wrong_answer1'=>$arrayResult[2],
+            'wrong_answer2'=>$arrayResult[3],
+            'wrong_answer3'=>$arrayResult[4],
+            'wrong_answer4'=>$arrayResult[5],
+            'wrong_answer5'=>$arrayResult[6],
+            'explanation'=>$arrayResult[7],
+            'language'=>$validated['language']
+
+        );
+        $collectedArr=json_decode(json_encode($assocArray));
+        /*   print_r($collectedArr); exit; */
+
+        return new ResourcesQuestionAnswer($collectedArr);
+
     }
 
 

@@ -20,9 +20,9 @@ const getQuestionAnswers=async(params)=>{
     // 1. create header as required by API server
     // 2. make the call
     if(params=='en'){
-        var language="English";
+        var language="en"; //'English' for original version
     }else{
-        var language="Hindi";
+        var language="hi"; // 'Hindi' for original version
     }
 
     return await api.post(BASE_URL+'api/questionAnswerSet',{language:language});

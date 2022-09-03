@@ -11,8 +11,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
 
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 
@@ -43,7 +41,7 @@ function Test(){
 
 
 
-    const [questionSet,setQuestionSet]=React.useState({ // will hold the set of questions along with resof the meta data received from API
+    const [questionSet,setQuestionSet]=React.useState([{ // will hold the set of questions along with resof the meta data received from API
         question:'',
         answers:{
             correct_answer0:'',
@@ -58,10 +56,10 @@ function Test(){
             pokp_link:'',
             bodhitube_podbean_link:''
         }
-    });
+    }]);
 
     const [shuffeledAnswers,setShuffeledAnswers]=React.useState(['','','','','','','']); // holds shuffled answers
-    /* const [currentQuestionNumber,setCurrentQuestionNumber]=React.useState(0); */ // keeps track of qhich question is being displayed from questionSet (0-5)
+    const [currentQuestionNumber,setCurrentQuestionNumber]=React.useState(0); // keeps track of qhich question is being displayed from questionSet (0-5)
     const [questionSequenceNumber,setQuestionSequenceNumber]=React.useState(1); // keeps track of total number of qyestions answered
     const [selectedAnswer, setSelectedAnswer] = React.useState(false); // index of the crrent selected answer
     const [correctAnswer, setCorrectAnswer] = React.useState(false); // index of the correct of current question answer
@@ -71,7 +69,6 @@ function Test(){
     // button /style states
     const [submitted,setSubmitted]=React.useState(false); // boolean - true when answer submit is clicked
     const [answerSelected,setAnswerSelected]=React.useState(false); // boolean - true when any of the answer option is selected
-    const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
     const [helperText, setHelperText] = React.useState('Choose an answer');
     const answersHandle=React.useRef(null);
@@ -90,26 +87,25 @@ function Test(){
     // initial fetch of the question sets
     useEffect(()=>{
       getFreshQuestionSet();
-
+      setCurrentQuestionNumber(0);
     },[]); // for getting questions from server
 
 
-    // shuffle anwers whenever question changes
+
     useEffect(()=>{
-
       shuffleAnswers();
-
-
-    },[questionSet]) // shuffle the answers for next question
+    },[questionSet,currentQuestionNumber]) // shuffle the answers for next question
 
 
 
-    //get fresh question from API and set it
     const getFreshQuestionSet=()=>{
-        setIsLoading(true);
+
         QuestionAnsAPI.getQuestionAnswers(state.user.language)
         .then((result)=>{
-            setQuestionSet(result.data);
+            console.log(result);
+
+            setQuestionSet(result.data.data);
+            console.log('globalState',state.answeredQuestions);
         })
         .catch(err=>{alert(err)});
     }
@@ -122,14 +118,18 @@ function Test(){
      * identifies correct answer for current question and updates the state "correctAnswer" - it's an index - position of the correct answer in above mentioned shuffled array
      */
     const shuffleAnswers=()=>{
-        const answers=questionSet.answers;
+        const answers=questionSet[currentQuestionNumber].answers;
         const shuffeledAnswersObj=shuffleObject(answers);
+
         const answerKeys=Object.keys(shuffeledAnswersObj);
+        console.log('answerKeys=',answerKeys);
+
         const correctAnswer=answerKeys.indexOf('correct_answer0');
+        console.log('correctAnswer=',correctAnswer);
         setCorrectAnswer(correctAnswer);
         const answerValues=Object.values(shuffeledAnswersObj);
         setShuffeledAnswers(answerValues);
-        setIsLoading(false);
+
 
        // return shuffeledAnswerElements;
 
@@ -152,7 +152,7 @@ function Test(){
     const handleSubmit=()=>{
         setSubmitted(true); // change the state so that "Next" button is displayed
         tempStorage={
-            question:questionSet.question,
+            question:questionSet[currentQuestionNumber].question,
             answers:shuffeledAnswers, // array
             selectedAnswer:selectedAnswer, // index
             correctAnswer:correctAnswer, // index
@@ -185,8 +185,12 @@ function Test(){
 
         setHelperText('Choose an answer');
         setQuestionSequenceNumber(questionSequenceNumber+1);// always increments
-        // make a call to server for next question
-        getFreshQuestionSet();
+        if(currentQuestionNumber>=4){ // then we need to make call to server for more questions
+          getFreshQuestionSet();
+          setCurrentQuestionNumber(0);
+        }else{
+          setCurrentQuestionNumber(currentQuestionNumber+1);
+        }
         setSelectedAnswer(false);
         setSubmitted(false);
         setAnswerSelected(false);
@@ -227,21 +231,14 @@ function Test(){
                     overflow:'auto'
                 }}
             >
-                 <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={isLoading}
-
-                >
-                    <CircularProgress color="inherit" />
-                </Backdrop>
                 <Typography gutterBottom variant="h6">
-                  {t("Q")}.{questionSequenceNumber} {questionSet.question}
+                  {t("Q")}.{questionSequenceNumber} {questionSet[currentQuestionNumber].question}
                 </Typography>
                 <Divider  variant="middle" />
                 <Grid item container p={2} >
 
                     <FormControl error={error}>
-                        <FormLabel id="controlled-radio-buttons-group">{t("Answers")}</FormLabel>
+                        <FormLabel id="controlled-radio-buttons-group">Answers</FormLabel>
                         <RadioGroup
                             aria-labelledby="controlled-radio-buttons-group"
                             name="controlled-radio-buttons-group"
@@ -266,7 +263,7 @@ function Test(){
                        <FormControl error={error}>
                          <FormHelperText> <Typography variant="overline">{t(helperText)} </Typography></FormHelperText>
                           <Typography variant="body2">
-                              {questionSet.explanation}
+                              {questionSet[currentQuestionNumber].explanation}
                           </Typography>
                          {/*  <Box mt={2}>
                             <Link href={questionSet[currentQuestionNumber].attributes.pokp_link}><IconButton  color="secondary"><OndemandVideoIcon /><Typography variant="caption">{t('Video Link')}</Typography> </IconButton></Link>

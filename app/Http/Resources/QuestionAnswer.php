@@ -14,11 +14,12 @@ class QuestionAnswer extends JsonResource
      */
     public function toArray($request)
     {
+        /*  print_r($this); exit; */
         //return parent::toArray($request);
         // here we can format,remove, edit the response fields as we need
         return [
             'id'=>(string)$this->id, // converted to string to adhere with json standards
-            'question_level'=>$this->question_level,
+            'question_level'=>$this->question_level??'',
             'question'=>$this->question,
             'answers'=>[
                 'correct_answer0'=>$this->correct_answer,
@@ -32,14 +33,14 @@ class QuestionAnswer extends JsonResource
 
             'attributes'=>[
                 'language'=>$this->language,
-                'pokp_link'=>$this->pokp_link,
-                'bodhitube_podbean_link'=>$this->bodhitube_podbean_link,
-                'created_by'=>$this->created_by,
-                'reviewed_by'=>$this->reviewed_by,
-                'verification_status'=>$this->verification_status,
-                'last_modified_by'=>$this->last_modified_by,
-                'created_at'=>(string)$this->created_at,
-                'updated_at'=>(string)$this->updated_at
+                'pokp_link'=>$this->pokp_link??'',
+                'bodhitube_podbean_link'=>$this->bodhitube_podbean_link??'',
+                'created_by'=>$this->created_by??'',
+                'reviewed_by'=>$this->reviewed_by??'',
+                'verification_status'=>$this->verification_status??'',
+                'last_modified_by'=>$this->last_modified_by??'',
+               /*  'created_at'=>(string)$this->created_at??'',
+                'updated_at'=>(string)$this->updated_at??'' */
             ],
 
         ];
