@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import {Context} from "../store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -80,6 +80,13 @@ function Home(){
         console.log('Authenticated');
     }
 
+    // when component re-renders, check the preset language and set the switch accordingly
+    useEffect(()=>{
+        if(state.user.language=='hi'){
+            setChecked(true);
+        }
+    });
+
   return(
     <Grid container
         alignItems="center"
@@ -102,15 +109,21 @@ function Home(){
                 </Typography>
                 <Divider  variant="middle" />
                 <Grid item container p={2} >
-                         <ul>
+                    <Grid item xs={12}>
+                        <ul>
                             <li><Typography varient="body2">{t('Rule1')}</Typography></li>
                             <li><Typography varient="body2">{t('Rule2')}</Typography></li>
                             <li><Typography varient="body2">{t('Rule3')}</Typography></li>
                             <li><Typography varient="body2">{t('Rule4')}</Typography></li>
                             <li><Typography varient="body2">{t('Rule5')}</Typography></li>
                         </ul>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography paragraph varient="body2">{t('GeneralInfo')}</Typography>
+                    </Grid>
 
-                    <Typography paragraph varient="body2">{t('GeneralInfo')}</Typography>
+
+
 
 
 
@@ -173,7 +186,7 @@ function Home(){
                 </Grid>
             </DialogContent>
             <DialogActions >
-                <Button onClick={handleDialogClose}>OK</Button>
+                <Button onClick={handleDialogClose}>{t("OK")}</Button>
             </DialogActions>
         </Dialog>
 

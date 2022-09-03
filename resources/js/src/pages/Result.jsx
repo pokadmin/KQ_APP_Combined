@@ -95,7 +95,7 @@ function Result(){
                         }}
 
                     >
-                            {t("Well Done, Here are your results")}
+                            {t("Here are your results")}
                     </Typography>
 
                     <Typography
@@ -107,7 +107,7 @@ function Result(){
                             color:'info.main'
                         }}
                     >
-                        {t("You have scored ")+ totalCorrectAnswered +"/"+ totalAnswered}
+                        {t("You have scored")+" "+ totalCorrectAnswered +"/"+ totalAnswered}
                     </Typography>
 
                 </Grid>

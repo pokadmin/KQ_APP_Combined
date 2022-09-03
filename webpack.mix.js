@@ -18,5 +18,5 @@ mix.js('resources/js/src/app.js', 'public/js')
         devtool: 'inline-source-map',
     }) */
     .sass('resources/sass/app.scss', 'public/css')
-   /*  .setResourceRoot("/KQ/knowledge-quotient/public"); */
-   .setResourceRoot("/public");
+    /* .setResourceRoot("/KQ/knowledge-quotient/public"); // localhost */
+   .setResourceRoot("/pub/qz/public"); // server
