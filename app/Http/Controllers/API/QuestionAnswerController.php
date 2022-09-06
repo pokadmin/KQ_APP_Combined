@@ -255,24 +255,33 @@ class QuestionAnswerController extends Controller
         }else{
             $maxQuestionLimit=160;
         }
-        $questionId=rand(1,$maxQuestionLimit); // questions are
-        $postData=array(
+
+        // genrate random question number and query api till we get full and correct response
+        $completeResponse=false;
+        do{
+          $questionId=rand(1,$maxQuestionLimit);
+          $postData=array(
             'qid' => $questionId,
             'lang' => $validated['language'],
             'ver' => '1',
             'authcode' => env('GYANMARG_API_AUTHCODE')
-        );
+          );
+          $apiURL=env('GYANMARG_API_URL');
+          $response = Http::asForm()->post($apiURL, $postData);
+          $arrayResult=$response->json(); // 0=>Question, 1=>correct answer,2=>wrong answer,3=>wrong answer... 7=>explanantion
+          $incompleteResponse=false;
+          for($i=0;$i<=6;$i++){ // it's fine for us if the explanation is blank. so we skip 7th item
+            if($arrayResult[$i]==''){
+                $incompleteResponse=true;
+            }
+          }
+          if(!$incompleteResponse){
+            $completeResponse=true;
+          }
 
-        $apiURL=env('GYANMARG_API_URL');
-        $response = Http::asForm()->post($apiURL, $postData);
-        $arrayResult=$response->json(); // 0=>Question, 1=>correct answer, last=>explanantion
+        }while(!$completeResponse);
 
-        if(count($arrayResult)<1){
-            return response([
-                'status'=>false,
-                'message'=> "No Data found for question ".$questionId."Details->".$response->body()
-            ],401);
-        }
+        // if any of the answers are blank then re-request
 
         $assocArray=array(
             'id'=>$questionId,
