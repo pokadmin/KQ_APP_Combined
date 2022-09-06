@@ -62,6 +62,12 @@ const Reducer=(state=initialState,action)=>{
                  ]
              }
 
+        case 'resetAnsweredQuestions':
+            return {
+                ...state,
+                answeredQuestions:[]
+            }
+
         default:
             return state
 

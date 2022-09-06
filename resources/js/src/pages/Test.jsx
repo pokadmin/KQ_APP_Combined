@@ -89,7 +89,10 @@ function Test(){
 
     // initial fetch of the question sets
     useEffect(()=>{
-      getFreshQuestionSet();
+        // rest the score
+        dispatch({type:'resetAnsweredQuestions',payload:[]});
+        // get fresh question
+        getFreshQuestionSet();
 
     },[]); // for getting questions from server
 
@@ -277,9 +280,10 @@ function Test(){
 
             </CardContent>
             <CardActions sx={{ justifyContent:"center", alignItems:"center"}}>
+                <Button variant="outlined" color="error" onClick={handleEnd} >{t('End')}</Button>
                 {!submitted&&<Button disabled={!answerSelected} variant="outlined" color="secondary" onClick={handleSubmit} >{t('Submit')}</Button>}
                 {submitted&&<Button disabled={!answerSelected} variant="outlined" color="secondary" onClick={handleNext} >{t('Next')}</Button>}
-                <Button variant="outlined" color="error" onClick={handleEnd} >{t('End')}</Button>
+
             </CardActions>
 
         </Card>
