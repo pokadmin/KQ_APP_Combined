@@ -4,6 +4,7 @@ import tomato from "../../icons/tomato-icon-small.png"
 import {Context} from "../../store"
 import {useTranslation} from 'react-i18next'
 import { NavLink, useNavigate } from "react-router-dom";
+import { GearFill } from 'react-bootstrap-icons';
 
 function Header() {
 
@@ -15,6 +16,10 @@ function Header() {
         dispatch({type:"authentication",payload:{showLogin:true}})
     }
 
+    const handleLogoutClick=()=>{
+       console.log('now handle logout');
+    }
+
 	return (
 			// implment header
 
@@ -22,35 +27,48 @@ function Header() {
 
 				<Navbar bg="dark" variant="dark">
 					<Container fluid>
-						<Navbar.Brand style={{cursor:"pointer"}} onClick={()=>{navigate('/home')}}>
-							<img
-									alt=""
-									src={tomato}
-									width="30"
-									height="30"
-									className="d-inline-block align-top"
-							/>{' '}
-							{t('Knowledge Quotient')}
+						<Navbar.Brand style={{cursor:"pointer"}} >
+							<span onClick={()=>{navigate('/home')}}>
+                                <img
+                                    alt=""
+                                    src={tomato}
+                                    width="30"
+                                    height="30"
+                                    className="d-inline-block align-top"
+                                />{' '}
+                                {t('Knowledge Quotient')}
+                            </span>
+                            <span onClick={()=>{navigate('/admin')}}>
+                                {' '}
+                                {state.user.type=='admin'&&
+                                <button className="btn btn-secondary"><GearFill></GearFill></button>
+                                }
+                            </span>
+
+
 						</Navbar.Brand>
                         <Navbar.Toggle />
                             <Navbar.Collapse className="justify-content-end">
                             <Navbar.Text>
                                 {state.user.type=='guest'&&
-                                    <>{t('Guest')} </>
+                                    <>{t('Guest')}&nbsp;&nbsp;|</>
                                 }
                                 {state.user.type!='guest'&&
-                                    <>Signed in as {state.user.username} &nbsp;&nbsp; | &nbsp;&nbsp;</>
+                                    <>{state.user.username}&nbsp;&nbsp;|</>
                                 }
 
                             </Navbar.Text>
-                           {/*  <Nav>
-                                <Nav.Link onClick={handleLoginClick}>
-                                {state.user.type!='admin'&&
-                                    <>Admin login</>
-                                }
-                                </Nav.Link>
+                            <Nav>
 
-                            </Nav> */}
+                                {state.user.type=='guest'&&
+                                <Nav.Link onClick={handleLoginClick}>Admin login</Nav.Link>
+                                }
+
+                                {state.user.type!='guest'&&
+                                <Nav.Link onClick={handleLogoutClick}>Logout</Nav.Link>
+                                }
+
+                            </Nav>
                             </Navbar.Collapse>
 					</Container>
 				</Navbar>

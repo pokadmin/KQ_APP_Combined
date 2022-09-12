@@ -30,6 +30,7 @@ import AccountCircle  from "@mui/icons-material/AccountCircle";
 // authentication service
 import AuthenticationAPI from "../services/AuthenticationAPI";
 import { Box } from "@mui/system";
+import SocialAuth from "./SocialAuth";
 
 
 function Login(){
@@ -79,24 +80,7 @@ function Login(){
     const handleLogin=()=>{
         AuthenticationAPI.attempLogin(values.email,values.password)
         .then((result)=>{
-            if(result.data.status==true){
-                // after sucessful response, remove previously set errors if any
-                setValues({
-                    ...values,
-                    error: false,// true or false
-                    message:''
-                  });
-
-                 // now set the user details and rights
-                 dispatch({type:"changeUserType",payload:{
-                    type:result.data.user.type,
-                    username:result.data.user.name
-                }})
-
-                 // now close the login dialog and set authetication details
-                 dispatch({type:"authentication",payload:{showLogin:false,isAuthenticated:true,authentictaedUser:result.data.user.name}});
-
-            }
+            console.log(result);
         })
         .catch(error=>{
           if (error.response) {
@@ -138,6 +122,16 @@ function Login(){
             <DialogContent>
                 <Grid container spacing={3}>
                 <Grid item xs={12} sx={{alignItems:"center"}}>
+
+                    <Box mb={2}>
+                        <SocialAuth />
+                    </Box>
+
+                    <Divider>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                      OR
+                    </Typography>
+                    </Divider>
 
                     <Stack
                     direction="column"
@@ -217,6 +211,16 @@ function Login(){
                     <Button color="primary" variant="contained" onClick={handleDialogClose}>Cancel</Button>
                 </Stack>
 
+            </Box>
+            <Box>
+                <Typography
+                variant="body2"
+                align="center"
+                sx={{ mt: 2 }}
+                >
+                    Don’t have an account?{" "}
+                    <NavLink key="register" to="/register">Register</NavLink>
+                </Typography>
             </Box>
         </Dialog>
 

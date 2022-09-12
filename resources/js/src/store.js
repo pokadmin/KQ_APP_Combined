@@ -13,7 +13,18 @@ const initialState={
         email:'',
         username:''
     },
-    answeredQuestions:[]
+    answeredQuestions:[],
+
+    // admin section
+    SSPGrid:{
+        rowState:{
+          page:0,
+          pageSize:10,
+          rows:[],
+          rowCount:0,
+          loading:false,
+        }
+    }
 
 
 }
@@ -43,8 +54,8 @@ const Reducer=(state=initialState,action)=>{
             return {
                 ...state,
                 user:{
-                    ...user,
-                    type:payload.type??'guest',
+                    ...state.user,
+                    type:payload.type??'guest', // guest, user, admin
                     email:payload.email??'',
                     username:payload.username??'guest'
                 }
@@ -67,6 +78,16 @@ const Reducer=(state=initialState,action)=>{
                 ...state,
                 answeredQuestions:[]
             }
+
+            case 'setRowState':
+                //console.log('store action setrow state fired',payload);
+                return{
+                    ...state,
+                    SSPGrid:{
+                        ...state.SSPGrid,
+                        rowState:payload.rowState
+                    }
+                }
 
         default:
             return state
