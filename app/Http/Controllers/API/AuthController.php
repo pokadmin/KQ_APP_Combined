@@ -5,8 +5,6 @@
 //https://www.section.io/engineering-education/laravel-sanctum-api-auth/
 //https://www.codecheef.org/article/laravel-sanctum-authentication-example-with-product-api
 namespace App\Http\Controllers\API;
-
-exit;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Google_Client;
@@ -15,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -70,7 +69,6 @@ class AuthController extends Controller
     } //register ends
 
 
-
     /**
      * Login
      *
@@ -93,12 +91,54 @@ class AuthController extends Controller
 
         $creds=$validator->validated();
 
-        if(!Auth::attempt($creds)){
+
+
+        // now send these creds to gyanmarg api and authenticate the user
+        $postData=array(
+            'pokpemail' => $creds['email'],
+            'ver' => '2',
+            'pass' => $creds['password'],
+            'authcode' => env('GYANMARG_API_AUTHCODE')
+        );
+
+        $apiURL=env('GYANMARG_API_AUTH_URL');
+
+        $response = Http::asForm()->post($apiURL, $postData);
+
+        $result=$response->body();
+        $userDetails=explode(",",$result);
+
+        // check if error
+        if($userDetails[0]=='Error'){
             return response([
                 'status'=>false,
                 'message'=>'invalid email or password'
             ],401);
         }
+
+        /**
+         * Assign user type
+         * if user is on or beyond step7 then he is given admin rights
+         */
+        $userType='user';
+        if($userDetails[2]>=7){
+            $userType='admin';
+        }
+        $userData=array(
+            'language'=>$userDetails[0],
+            'name'=>$userDetails[1],
+            'type'=>$userType
+        );
+
+       /*  $arrayResult=$response->json();  */// 0=>Question, 1=>correct answer,2=>wrong answer,3=>wrong answer... 7=>explanantion
+
+
+      /*   if(!Auth::attempt($creds)){
+            return response([
+                'status'=>false,
+                'message'=>'invalid email or password'
+            ],401);
+        } */
 
         //check email
       /*  $user=User::where('email',$request->email)->first();
@@ -114,10 +154,7 @@ class AuthController extends Controller
         $response=[
             'status'=>true,
             'message'=>'Login successful!',
-            'data'=>[
-                'user'=>auth()->user(),
-                //'token'=>$token
-            ]
+            'user'=>$userData,
         ];
 
         return response($response,201);

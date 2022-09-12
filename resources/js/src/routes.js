@@ -29,7 +29,7 @@ const routes = [
   {
     name: "Admin",
     key: "admin",
-    route: "/admin",
+    route: "/admin/*",
     component: <Admin />,
   },
   {

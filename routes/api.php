@@ -27,7 +27,11 @@ Route::middleware(['auth:sanctum','can:CRUD'])->group( function () {
 Route::get("/questionAnswer",[QuestionAnswerController::class,'index']);
 Route::post("/questionAnswerSet",[QuestionAnswerController::class,'questionAnswerSet']);
 Route::get("/questionAnswer/{questionAnswer}",[QuestionAnswerController::class,'show']);
-Route::post("/register",[AuthController::class,'register']);
 Route::post("/login",[AuthController::class,'login']);
+Route::get("/auth/check",[AuthController::class,'check']);
+
+/*
+Route::post("/register",[AuthController::class,'register']);
 Route::get('/auth',[AuthController::class,'redirectToAuth']); // need to be stateless as we are using it in API
 Route::post('/auth/callback',[AuthController::class,'handleAuthCallback']);
+ */
