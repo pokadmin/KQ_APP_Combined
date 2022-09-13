@@ -3,9 +3,11 @@ import {Context} from "../store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
-import LoadingSpinner from "./LoadingSpinner";
 
 import { grey } from "@mui/material/colors";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import {
   Button,
   Grid,
@@ -197,7 +199,12 @@ function Login(){
                             />
                         </FormControl>
                         {values.error &&<Typography color="error" variant="overline" gutterBottom>{values.message}</Typography>}
-                        {isLoading ? <LoadingSpinner /> : ""}        
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open={isLoading}
+                        >
+                            <CircularProgress color="inherit" />
+                        </Backdrop>        
                     </Stack>
                 </Grid>
                 </Grid>
