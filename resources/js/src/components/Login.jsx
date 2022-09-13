@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import {Context} from "../store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
+import LoadingSpinner from "./LoadingSpinner";
 
 import { grey } from "@mui/material/colors";
 import {
@@ -38,8 +39,7 @@ function Login(){
 
     const navigate=useNavigate(); // for manual routing
 
-
-
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleDialogClose=(event,reason)=>{
       if(reason && reason == "backdropClick")
@@ -77,9 +77,11 @@ function Login(){
     };
 
     const handleLogin=()=>{
+        setIsLoading(true);
         AuthenticationAPI.attempLogin(values.email,values.password)
         .then((result)=>{
             if(result.data.status==true){
+                setIsLoading(true);
                 // after sucessful response, remove previously set errors if any
                 setValues({
                     ...values,
@@ -99,6 +101,7 @@ function Login(){
             }
         })
         .catch(error=>{
+            setIsLoading(false);
           if (error.response) {
             setValues({
               ...values,
@@ -108,6 +111,7 @@ function Login(){
 
 
           }else{
+            setIsLoading(false);
             alert(error)
           }
 
@@ -193,6 +197,7 @@ function Login(){
                             />
                         </FormControl>
                         {values.error &&<Typography color="error" variant="overline" gutterBottom>{values.message}</Typography>}
+                        {isLoading ? <LoadingSpinner /> : ""}        
                     </Stack>
                 </Grid>
                 </Grid>
@@ -213,7 +218,7 @@ function Login(){
                     justifyContent="center"
                     sx={{ width: 1 }}
                 >
-                    <Button color="primary" variant="contained" onClick={handleLogin}>Login</Button>
+                    <Button color="primary" variant="contained" onClick={handleLogin} disabled={isLoading}>Login</Button>
                     <Button color="primary" variant="contained" onClick={handleDialogClose}>Cancel</Button>
                 </Stack>
 
