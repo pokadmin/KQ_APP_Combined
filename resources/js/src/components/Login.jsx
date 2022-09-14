@@ -83,7 +83,7 @@ function Login(){
         AuthenticationAPI.attempLogin(values.email,values.password)
         .then((result)=>{
             if(result.data.status==true){
-                setIsLoading(true);
+                setIsLoading(false);
                 // after sucessful response, remove previously set errors if any
                 setValues({
                     ...values,
