@@ -32,7 +32,10 @@ git clone https://github.com/pokadmin/kq_back_end.git
 cd kq_back_end
 composer install
 ```
-Note: In case 'composer install' is timing out, remove "google/apiclient" from composer.json in the kq_back_end folder and run 'composer update'
+Note: 
+- Ensure you have run 'composer update', if not done earlier, composer install above will give error
+- Ensure you have .env file inside kq_back_end folder and it has valid APP_URL key value pair
+- In case 'composer install' is timing out, remove "google/apiclient" from composer.json in the kq_back_end folder and run 'composer update'
 
 ## Database Setup
 **Setup MySQL DB**
